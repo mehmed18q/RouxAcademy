@@ -1,95 +1,40 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using RouxAcademy.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace RouxAcademy.Controllers
+
+
+namespace Tutorial.AspNetSecurity.WebClient.Controllers
 {
-    public class AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager) : Controller
+    public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager = userManager;
-        private readonly SignInManager<IdentityUser> _signInManager = signInManager;
-
-        [HttpGet]
-        public IActionResult Register()
+        
+        public AccountController()
         {
-            return View();
+         
         }
+
+
+        //[HttpPost]
+        //public async Task Logout()
+        //{
+        //    await HttpContext.SignOutAsync("oidc");
+        //    await HttpContext.SignOutAsync("Cookie");
+        //}
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public IActionResult Logout()
         {
-            if (ModelState.IsValid)
-            {
-                IdentityUser user = new()
-                {
-                    Email = model.Email,
-                    UserName = model.Email
-                };
-
-
-
-                IdentityResult result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    // it Must be Add By Admin not in Register 
-                    if (!string.IsNullOrEmpty(model.FacultyNumber))
-                    {
-                        await _userManager.AddClaimAsync(user, new Claim("FacultyNumber", model.FacultyNumber));
-                    }
-                    return RedirectToAction("Login", "Account");
-                }
-                else
-                {
-                    foreach (IdentityError err in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, err.Description);
-                    }
-                }
-            }
-            return View(model);
+            return new SignOutResult(new string[]{ "oidc", "Cookies" });
         }
 
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                Microsoft.AspNetCore.Identity.SignInResult result =
-                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
-                {
-                    return Url.IsLocalUrl(returnUrl) ? Redirect(returnUrl) : RedirectToAction(nameof(StudentController.Index), "Student");
-                }
-                else
-                {
-                    ModelState.AddModelError(String.Empty, "Invalid login attemp.");
-                }
-            }
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(HomeController.Index), "Home");
-        }
-
-        [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
     }
 }

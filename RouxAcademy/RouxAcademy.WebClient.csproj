@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Views\Account\AccessDenied.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <None Include="Views\Home\Privacy.cshtml" />
     <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_ContentLayout.cshtml" />
+    <None Include="Views\Shared\_HeaderNavBar.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\Student\AddGrade.cshtml" />
+    <None Include="Views\Student\Classifications.cshtml" />
+    <None Include="Views\Student\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

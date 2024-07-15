@@ -1,25 +1,32 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using RouxAcademy.Models.DataServices;
-using RouxAcademy.Models.Student;
+using Tutorial.AspNetSecurity.WebClient.Models.Student;
+using Tutorial.AspNetSecurity.WebClient.DataServices;
+using Microsoft.AspNetCore.Authorization;
 
-namespace RouxAcademy.Controllers
+// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace Tutorial.AspNetSecurity.WebClient.Controllers
 {
     [Authorize]
-    public class StudentController(ILogger<StudentController> logger, StudentDataContext db) : Controller
+    public class StudentController : Controller
     {
-        private readonly ILogger<StudentController> _logger = logger;
-        private readonly StudentDataContext _db = db;
+        private readonly StudentDataContext _db;
 
-
-        public IActionResult Index()
+        public StudentController(StudentDataContext db)
         {
-            string? userName = User.Identity.Name;
-            IQueryable<CourseGrade> grades = _db.Grades.Where(g => g.StudentUsername == userName);
-            return View(grades);
+            _db = db;
         }
 
-        [HttpGet, Authorize(Policy = "FacultyOnly")]
+        // GET: /<controller>/
+        public IActionResult Index()
+        { 
+            return View(new List<CourseGrade>());
+        }
+        [HttpGet]
         public IActionResult AddGrade()
         {
             return View();
@@ -29,31 +36,29 @@ namespace RouxAcademy.Controllers
         public IActionResult AddGrade(CourseGrade model)
         {
             if (!ModelState.IsValid)
-            {
                 return View();
-            }
 
             model.CreatedDate = DateTime.Now;
-            model.CreatedBy = User.Identity.Name;
 
             _db.Grades.Add(model);
             _db.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(StudentController.Index), "Student");
         }
-
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Classifications()
         {
-            List<string> classifications =
-            [
+            var classifications = new List<string>()
+            {
                 "Freshman",
                 "Sophomore",
                 "Junior",
                 "Senior"
-            ];
+            };
 
             return View(classifications);
         }
+        
     }
 }

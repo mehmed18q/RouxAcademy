@@ -1,27 +1,20 @@
-using Microsoft.AspNetCore.Mvc;
-using RouxAcademy.Models;
-using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace RouxAcademy.Controllers
+// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace RouxAcademy.WebClient.Controllers
 {
-    public class HomeController(ILogger<HomeController> logger) : Controller
+    public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger = logger;
-
+        // GET: /<controller>/
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
     }
 }
