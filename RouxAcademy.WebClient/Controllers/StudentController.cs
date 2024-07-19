@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Tutorial.AspNetSecurity.WebClient.Models.Student;
-using Tutorial.AspNetSecurity.WebClient.DataServices;
-using Microsoft.AspNetCore.Authorization;
+using RouxAcademy.WebClient.Models.DataServices;
+using RouxAcademy.WebClient.Models.Student;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Tutorial.AspNetSecurity.WebClient.Controllers
+namespace RouxAcademy.WebClient.Controllers
 {
     [Authorize]
     public class StudentController : Controller
@@ -23,7 +19,7 @@ namespace Tutorial.AspNetSecurity.WebClient.Controllers
 
         // GET: /<controller>/
         public IActionResult Index()
-        { 
+        {
             return View(new List<CourseGrade>());
         }
         [HttpGet]
@@ -36,7 +32,9 @@ namespace Tutorial.AspNetSecurity.WebClient.Controllers
         public IActionResult AddGrade(CourseGrade model)
         {
             if (!ModelState.IsValid)
+            {
                 return View();
+            }
 
             model.CreatedDate = DateTime.Now;
 
@@ -49,16 +47,16 @@ namespace Tutorial.AspNetSecurity.WebClient.Controllers
         [AllowAnonymous]
         public IActionResult Classifications()
         {
-            var classifications = new List<string>()
-            {
+            List<string> classifications =
+            [
                 "Freshman",
                 "Sophomore",
                 "Junior",
                 "Senior"
-            };
+            ];
 
             return View(classifications);
         }
-        
+
     }
 }

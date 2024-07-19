@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using RouxAcademy.Models.DataServices;
+using RouxAcademy.WebClient.Models.DataServices;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -11,19 +10,28 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddDbContext<StudentDataContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseSqlServer(connectionString,
-    optionsBuilder => optionsBuilder.MigrationsAssembly("RouxAcademy")));
-
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("FacultyOnly",
         policy => policy.RequireClaim("FacultyNumber"));
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<IdentityDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "oidc";
+})
+.AddCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.Cookie.Name = "Cookie";
+}).AddOpenIdConnect("oidc", options =>
+{
+    options.Authority = "http://localhost:5000";
+    options.RequireHttpsMetadata = false;
+    options.ClientId = "RouxAcademyMVC";
+    options.SaveTokens = true;
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -43,6 +51,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

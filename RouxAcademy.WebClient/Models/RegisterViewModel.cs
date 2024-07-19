@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RouxAcademy.Models
+namespace RouxAcademy.WebClient.Models
 {
     public class RegisterViewModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RouxAcademy.Models.Student
+namespace RouxAcademy.WebClient.Models.Student
 {
     public class CourseGrade
     {
@@ -24,6 +24,6 @@ namespace RouxAcademy.Models.Student
 
         public DateTime CreatedDate { get; set; }
 
-        public string? CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

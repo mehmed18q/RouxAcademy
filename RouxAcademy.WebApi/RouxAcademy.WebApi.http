@@ -1,0 +1,6 @@
+@RouxAcademy.WebApi_HostAddress = http://localhost:5005
+
+GET {{RouxAcademy.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

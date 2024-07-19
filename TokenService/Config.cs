@@ -28,8 +28,8 @@ namespace TokenService
                     ClientId = "RouxAcademyMVC",
                     ClientName = "Roux Academy MVC Client",
                     AllowedGrantTypes = GrantTypes.Implicit,
-                    RedirectUris = {"http://localhost:5026/signin-oidc"},
-                    PostLogoutRedirectUris = {"http://localhost:5026/signout-callback-oidc"},
+                    RedirectUris = {"http://localhost:5002/signin-oidc", "http://localhost:5000/signin-oidc"},
+                    PostLogoutRedirectUris = {"http://localhost:5002/signout-callback-oidc"},
                     AllowedScopes = new List<string>()
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
